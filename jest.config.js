@@ -4,8 +4,10 @@ export default {
   },
   testEnvironment: "jsdom",
   collectCoverageFrom: [
-    "src/**/*.js",
-    "!src/index.js"
+    "src/**/*.{js,jsx}",
+    "!src/index.js",
+    "!src/serviceWorker.js",
+    "!src/**/*.test.{js,jsx}"
   ],
   watchPathIgnorePatterns: [
     "<rootDir>/node_modules/"

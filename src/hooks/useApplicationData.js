@@ -8,6 +8,9 @@ import reducer, {
   SET_INTERVIEW
 } from "../reducers/application";
 
+//added this to fix error
+axios.defaults.baseURL = 'http://localhost:8001';
+
 export default function useApplicationData() {
   const [state, dispatch] = useReducer(reducer, {
     day: "Monday",
