@@ -1,10 +1,11 @@
-import classnames from "classnames";
+import React, { useState, useEffect } from 'react';
+import classnames from 'classnames';
 
-import "./InterviewerListItem.scss";
+import './InterviewerListItem.scss';
 
 export default function InterviewerItem(props) {
-  const itemClass = classnames("interviewers__item", {
-    "interviewers__item--selected": props.selected
+  const itemClass = classnames('interviewers__item', {
+    'interviewers__item--selected': props.selected,
   });
 
   return (
@@ -13,6 +14,7 @@ export default function InterviewerItem(props) {
         className="interviewers__item-image"
         src={props.avatar}
         alt={props.name}
+        referrerPolicy="no-referrer"
       />
       {props.selected && props.name}
     </li>
