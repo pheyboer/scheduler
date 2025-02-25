@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, waitFor, getByText } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 /*
@@ -26,4 +26,40 @@ it('defaults to Monday and changes the schedule when a new day is selected', () 
     fireEvent.click(queryByText('Tuesday'));
     expect(queryByText('Leopold Silvers')).toBeInTheDocument();
   });
+});
+
+// test: loads data, books an interview and reduces the spots remaining for the first day by 1
+
+it('loads data, books an interview and reduces the spots remaining for the first day by 1', async () => {
+  const { getByText, getAllByTestId, getByPlaceholderText, queryByText } =
+    render(<Application />);
+
+  //1.wait for text, confirm data has loaded
+  await waitFor(() => getByText('Archie Cohen'));
+
+  //2.find first empty appointment and click add
+  const appointment = getAllByTestId('appointment')[0];
+  fireEvent.click(getByText(appointment, 'Add'));
+
+  //3. enter new text in field with placeholder text
+  fireEvent.change(getByPlaceholderText(appointment, /Enter Student Name/i), {
+    target: { value: 'Lydia Miller-Jones' },
+  });
+
+  //4. click first interviewer in list
+  const interviewer = getAllByTestId('interviewer')[0];
+  fireEvent.click(interviewer);
+
+  //5. click save
+  fireEvent.click(getByText(appointment, 'Save'));
+
+  //6. check that the element with the text "Saving" is displayed
+  expect(getByText(appointment, 'Saving')).toBeInTheDocument();
+
+  //7. wait until new text appears
+  await waitFor(() => getByText(appointment, 'Lydia Miller-Jones'));
+
+  //8. check DayListItem with the text "Monday" also has the text "No spots remaining"
+  const day = getAllByTestId('day').find((day) => queryByText(day, 'Monday'));
+  expect(getByText(day, 'no spots remaining')).toBeInTheDocument();
 });
