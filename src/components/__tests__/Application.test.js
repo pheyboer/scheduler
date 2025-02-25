@@ -1,4 +1,9 @@
-import { fireEvent, waitFor, getByText } from '@testing-library/react';
+import {
+  fireEvent,
+  waitFor,
+  getByText,
+  findByText,
+} from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 /*
@@ -31,10 +36,10 @@ it('defaults to Monday and changes the schedule when a new day is selected', () 
 // test: loads data, books an interview and reduces the spots remaining for the first day by 1
 
 it('loads data, books an interview and reduces the spots remaining for the first day by 1', async () => {
-  const { container, debug } = render(<Application />);
+  const { container } = render(<Application />);
 
   //1.wait for text, confirm data has loaded
-  await waitFor(() => getByText('Archie Cohen'));
+  await findByText(container, 'Archie Cohen');
 
   //2.find first empty appointment and click add
   const appointments = getAllByTestId(container, 'appointment');
