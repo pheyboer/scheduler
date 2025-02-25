@@ -31,14 +31,15 @@ it('defaults to Monday and changes the schedule when a new day is selected', () 
 // test: loads data, books an interview and reduces the spots remaining for the first day by 1
 
 it('loads data, books an interview and reduces the spots remaining for the first day by 1', async () => {
-  const { getByText, getAllByTestId, getByPlaceholderText, queryByText } =
-    render(<Application />);
+  const { container, debug } = render(<Application />);
 
   //1.wait for text, confirm data has loaded
   await waitFor(() => getByText('Archie Cohen'));
 
   //2.find first empty appointment and click add
-  const appointment = getAllByTestId('appointment')[0];
+  const appointments = getAllByTestId(container, 'appointment');
+  const appointment = appointments[0];
+
   fireEvent.click(getByText(appointment, 'Add'));
 
   //3. enter new text in field with placeholder text
@@ -47,8 +48,7 @@ it('loads data, books an interview and reduces the spots remaining for the first
   });
 
   //4. click first interviewer in list
-  const interviewer = getAllByTestId('interviewer')[0];
-  fireEvent.click(interviewer);
+  fireEvent.click(getByAltText(appointment, 'Sylvia Palmer'));
 
   //5. click save
   fireEvent.click(getByText(appointment, 'Save'));
@@ -57,9 +57,11 @@ it('loads data, books an interview and reduces the spots remaining for the first
   expect(getByText(appointment, 'Saving')).toBeInTheDocument();
 
   //7. wait until new text appears
-  await waitFor(() => getByText(appointment, 'Lydia Miller-Jones'));
+  await findByText(appointment, 'Lydia Miller-Jones');
 
   //8. check DayListItem with the text "Monday" also has the text "No spots remaining"
-  const day = getAllByTestId('day').find((day) => queryByText(day, 'Monday'));
+  const day = getAllByTestId(container, 'day').find((day) =>
+    queryByText(day, 'Monday')
+  );
   expect(getByText(day, 'no spots remaining')).toBeInTheDocument();
 });
