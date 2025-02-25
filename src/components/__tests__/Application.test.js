@@ -1,9 +1,13 @@
 import {
   fireEvent,
-  waitFor,
   getByText,
   findByText,
+  getByPlaceholderText,
+  getAllByTestId,
+  getByAltText,
+  queryByText,
 } from '@testing-library/react';
+
 import '@testing-library/jest-dom';
 
 /*
@@ -17,10 +21,15 @@ import React from 'react';
 */
 import { render } from '@testing-library/react';
 
+import axios from 'axios';
+jest.mock('axios');
+
+
 /*
   We import the component that we are testing
 */
 import Application from '../Application';
+
 /*
   A test that renders a React Component
 */
@@ -35,20 +44,22 @@ it('defaults to Monday and changes the schedule when a new day is selected', () 
 
 // test: loads data, books an interview and reduces the spots remaining for the first day by 1
 
-it('loads data, books an interview and reduces the spots remaining for the first day by 1', async () => {
+it('loads data, books an interview and reduces the spots remaining for monday by 1', async () => {
   const { container } = render(<Application />);
 
   //1.wait for text, confirm data has loaded
+  // await findByText(container, "Archie Cohen");
   await findByText(container, 'Archie Cohen');
 
   //2.find first empty appointment and click add
+  // const appointments = getAllByTestId(container, 'appointment');
   const appointments = getAllByTestId(container, 'appointment');
   const appointment = appointments[0];
 
-  fireEvent.click(getByText(appointment, 'Add'));
+  fireEvent.click(getByAltText(appointment, 'Add'));
 
   //3. enter new text in field with placeholder text
-  fireEvent.change(getByPlaceholderText(appointment, /Enter Student Name/i), {
+  fireEvent.change(getByPlaceholderText(appointment, /enter student name/i), {
     target: { value: 'Lydia Miller-Jones' },
   });
 
@@ -56,7 +67,7 @@ it('loads data, books an interview and reduces the spots remaining for the first
   fireEvent.click(getByAltText(appointment, 'Sylvia Palmer'));
 
   //5. click save
-  fireEvent.click(getByText(appointment, 'Save'));
+  fireEvent.click(getByText(container, 'Save'));
 
   //6. check that the element with the text "Saving" is displayed
   expect(getByText(appointment, 'Saving')).toBeInTheDocument();
@@ -68,6 +79,7 @@ it('loads data, books an interview and reduces the spots remaining for the first
   const day = getAllByTestId(container, 'day').find((day) =>
     queryByText(day, 'Monday')
   );
+
   expect(getByText(day, 'no spots remaining')).toBeInTheDocument();
 });
 

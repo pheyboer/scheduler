@@ -54,7 +54,7 @@ const fixtures = {
 };
 
 export default {
-  defaults: { baseURL: "" },
+  defaults: { baseURL: '' },
   get: jest.fn((url) => {
     if (url === '/api/days') {
       return Promise.resolve({
@@ -82,4 +82,25 @@ export default {
 
     return Promise.reject(new Error(`Mocked endpoint not found: ${url}`));
   }),
+
+  put: jest.fn((url, body) => {
+    // Simulate updating an appointment
+    const match = url.match(/\/api\/appointments\/(\d+)/);
+    if (match) {
+      const id = Number(match[1]);
+      fixtures.appointments[id].interview = body.interview;
+
+      return Promise.resolve({
+        status: 204,
+        statusText: 'No Content',
+      });
+    }
+
+    return Promise.reject(new Error(`Mocked endpoint not found: ${url}`));
+  }),
+
+  post: jest.fn(() => Promise.resolve({ status: 201, statusText: 'Created' })),
+  delete: jest.fn(() =>
+    Promise.resolve({ status: 204, statusText: 'No Content' })
+  ),
 };
