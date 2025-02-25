@@ -70,3 +70,14 @@ it('loads data, books an interview and reduces the spots remaining for the first
   );
   expect(getByText(day, 'no spots remaining')).toBeInTheDocument();
 });
+
+it('loads data, cancels an interview and increases the spots remaining for Monday by 1', async () => {
+  // 1. Render the Application.
+  // 2. Wait until the text "Archie Cohen" is displayed.
+  // 3. Click the "Delete" button on the booked appointment.
+  // 4. Check that the confirmation message is shown.
+  // 5. Click the "Confirm" button on the confirmation.
+  // 6. Check that the element with the text "Deleting" is displayed.
+  // 7. Wait until the element with the "Add" button is displayed.
+  // 8. Check that the DayListItem with the text "Monday" also has the text "2 spots remaining".
+});
