@@ -165,10 +165,13 @@ it('loads data, edits an interview and keeps the spots remaining for Monday the 
   expect(getByText(day, '1 spot remaining')).toBeInTheDocument();
 });
 
+
+
+
 it('shows the save error when failing to save an appointment', async () => {
-  axios.put.mockRejectedValueOnce(new Error("Failed to save appointment"));
+  axios.put.mockRejectedValueOnce();
   //1 render the application
-  const { container, debug } = render(<Application />);
+  const { container } = render(<Application />);
 
   //2 Wait until the text "Archie Cohen" is displayed (data loaded)
   await findByText(container, 'Archie Cohen');
@@ -198,13 +201,28 @@ it('shows the save error when failing to save an appointment', async () => {
   await waitFor(() => {
     expect(queryByText(appointment, 'Could not book appointment.')).not.toBeInTheDocument();
   });
-
-  debug();
 });
 
 it('shows the delete error when failing to delete an existing appointment', () => {
+  axios.delete.mockRejectedValueOnce();
   //1 render the application
-  //2
-  //3
-  //4
+  const { container } = render(<Application />);
+
+  //2 Wait until the text "Archie Cohen" is displayed (data loaded)
+
+  //3 click delete button
+
+  //4 check for confirmation message
+
+  //5 click confirm
+
+  //6 check deleting element
+
+  //7 await error message
+
+  //8 check error message
+
+  //9 check close button
+
+
 });
