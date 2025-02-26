@@ -168,7 +168,7 @@ it('loads data, edits an interview and keeps the spots remaining for Monday the 
 it('shows the save error when failing to save an appointment', async () => {
   axios.put.mockRejectedValueOnce(new Error("Failed to save appointment"));
   //1 render the application
-  const { container } = render(<Application />);
+  const { container, debug } = render(<Application />);
 
   //2 Wait until the text "Archie Cohen" is displayed (data loaded)
   await findByText(container, 'Archie Cohen');
@@ -180,16 +180,26 @@ it('shows the save error when failing to save an appointment', async () => {
   fireEvent.click(getByAltText(appointment, 'Edit'));
 
   //4 Edit student name
+  fireEvent.change(getByPlaceholderText(appointment, /enter student name/i), {
+    target: { value: 'Lydia Miller-Jones' },
+  });
 
   //5 Select interviewer
+  fireEvent.click(getByAltText(appointment, 'Sylvia Palmer'));
 
   //6 Click save button
+  fireEvent.click(getByText(container, 'Save'));
 
   //7 Check for error message 
+  await findByText(appointment, 'Could not book appointment.');
 
   //8 Check close button and hides the error message
+  fireEvent.click(getByAltText(appointment, 'Close'));
+  await waitFor(() => {
+    expect(queryByText(appointment, 'Could not book appointment.')).not.toBeInTheDocument();
+  });
 
-
+  debug();
 });
 
 it('shows the delete error when failing to delete an existing appointment', () => {
