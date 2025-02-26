@@ -131,17 +131,34 @@ tests:
 
 it('loads data, edits an interview and keeps the spots remaining for Monday the same', () => {
   //1 render the application
+  const { container } = render(<Application />);
 
-  //2
+  //2 Wait until the text "Archie Cohen" is displayed - data loaded
+  await findByText(container, 'Archie Cohen');
 
-  //3
+  //3 click on the edit button on the booked appointment
+  const appointment = getAllByTestId(container, 'appointment').find((appointment) =>
+    queryByText(appointment, 'Archie Cohen')
+  );
+  fireEvent.click(getByAltText(appointment, 'Edit'));
 
-  //4
+  //4 edit data
+
+  //5 select interviewer
+
+  //6 click save button
+
+  //7 check if saving message is displayed
+
+  //8 wait until new info displayed
+
+  //9 check if DayList Item for monday has same spots remaining
 
 });
 
 
 it('shows the save error when failing to save an appointment', () => {
+  axios.put.mockRejectedValueOnce();
   //1 render the application
 
   //2
