@@ -7,6 +7,7 @@ import {
   getByAltText,
   queryByText,
   queryByAltText,
+  findAllByAltText,
 } from '@testing-library/react';
 
 import '@testing-library/jest-dom';
@@ -103,13 +104,19 @@ it('loads data, cancels an interview and increases the spots remaining for Monda
   ).toBeInTheDocument();
 
   // 5. Click the "Confirm" button on the confirmation.
-  fireEvent.click(getByText(appointment, "Confirm"));
+  fireEvent.click(getByText(appointment, 'Confirm'));
 
   // 6. Check that the element with the text "Deleting" is displayed.
+  expect(getByText(appointment, 'Deleting')).toBeInTheDocument();
 
   // 7. Wait until the element with the "Add" button is displayed.
+  await findAllByAltText(appointment, 'Add');
 
   // 8. Check that the DayListItem with the text "Monday" also has the text "2 spots remaining".
+  const day = getAllByTestId(container, 'day').find((day) =>
+    queryByText(day, 'Monday')
+  );
+  expect(getByText(day, '2 spots remaining')).toBeInTheDocument();
 
   debug();
 });
@@ -121,3 +128,38 @@ tests:
 "shows the save error when failing to save an appointment"
 "shows the delete error when failing to delete an existing appointment"
 */
+
+it('loads data, edits an interview and keeps the spots remaining for Monday the same', () => {
+  //1 render the application
+
+  //2
+
+  //3
+
+  //4
+
+});
+
+
+it('shows the save error when failing to save an appointment', () => {
+  //1 render the application
+
+  //2
+
+  //3
+
+  //4
+  
+});
+
+
+it('shows the delete error when failing to delete an existing appointment', () => {
+  //1 render the application
+
+  //2
+
+  //3
+
+  //4
+  
+});
