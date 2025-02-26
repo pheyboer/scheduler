@@ -205,7 +205,7 @@ it('shows the save error when failing to save an appointment', async () => {
 it('shows the delete error when failing to delete an existing appointment', async () => {
   axios.delete.mockRejectedValueOnce();
   //1 render the application
-  const { container, debug } = render(<Application />);
+  const { container } = render(<Application />);
 
   //2 Wait until the text "Archie Cohen" is displayed (data loaded)
   await findByText(container, 'Archie Cohen');
@@ -235,6 +235,4 @@ it('shows the delete error when failing to delete an existing appointment', asyn
 
   //9 check close button
   fireEvent.click(getByAltText(appointment, 'Close'));
-
-  debug();
 });
