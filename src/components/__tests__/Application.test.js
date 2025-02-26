@@ -8,6 +8,7 @@ import {
   queryByText,
   queryByAltText,
   findAllByAltText,
+  waitFor,
 } from '@testing-library/react';
 
 import '@testing-library/jest-dom';
@@ -86,7 +87,7 @@ it('loads data, books an interview and reduces the spots remaining for monday by
 
 it('loads data, cancels an interview and increases the spots remaining for Monday by 1', async () => {
   // 1. Render the Application.
-  const { container, debug } = render(<Application />);
+  const { container } = render(<Application />);
 
   // 2. Wait until the text "Archie Cohen" is displayed.
   await findByText(container, 'Archie Cohen');
@@ -118,7 +119,6 @@ it('loads data, cancels an interview and increases the spots remaining for Monda
   );
   expect(getByText(day, '2 spots remaining')).toBeInTheDocument();
 
-  debug();
 });
 
 /*
@@ -129,7 +129,7 @@ tests:
 "shows the delete error when failing to delete an existing appointment"
 */
 
-it('loads data, edits an interview and keeps the spots remaining for Monday the same', () => {
+it('loads data, edits an interview and keeps the spots remaining for Monday the same', async () => {
   //1 render the application
   const { container } = render(<Application />);
 
@@ -137,25 +137,34 @@ it('loads data, edits an interview and keeps the spots remaining for Monday the 
   await findByText(container, 'Archie Cohen');
 
   //3 click on the edit button on the booked appointment
-  const appointment = getAllByTestId(container, 'appointment').find((appointment) =>
-    queryByText(appointment, 'Archie Cohen')
+  const appointment = getAllByTestId(container, 'appointment').find(
+    (appointment) => queryByText(appointment, 'Archie Cohen')
   );
   fireEvent.click(getByAltText(appointment, 'Edit'));
 
   //4 edit data
+  fireEvent.change(getByPlaceholderText(appointment, /enter student name/i), {
+    target: { value: 'Lydia Miller-Jones' },
+  });
 
   //5 select interviewer
+  fireEvent.click(getByAltText(appointment, 'Sylvia Palmer'));
 
   //6 click save button
+  fireEvent.click(getByText(container, 'Save'));
 
   //7 check if saving message is displayed
+  expect(getByText(appointment, 'Saving')).toBeInTheDocument();
 
   //8 wait until new info displayed
+  await findByText(appointment, 'Lydia Miller-Jones');
 
   //9 check if DayList Item for monday has same spots remaining
-
+  const day = getAllByTestId(container, 'day').find((day) =>
+    queryByText(day, 'Monday')
+  );
+  expect(getByText(day, '1 spot remaining')).toBeInTheDocument();
 });
-
 
 it('shows the save error when failing to save an appointment', () => {
   axios.put.mockRejectedValueOnce();
@@ -166,17 +175,11 @@ it('shows the save error when failing to save an appointment', () => {
   //3
 
   //4
-  
 });
-
 
 it('shows the delete error when failing to delete an existing appointment', () => {
   //1 render the application
-
   //2
-
   //3
-
   //4
-  
 });
